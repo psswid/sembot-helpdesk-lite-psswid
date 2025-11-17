@@ -61,6 +61,15 @@ Route::middleware('auth:sanctum')->prefix('tickets')->group(function () {
         ->middleware('can:update,ticket')
         ->whereNumber('ticket');
 
+    // Triage accept/reject endpoints
+    Route::post('/{ticket}/triage-accept', [TriageController::class, 'accept'])
+        ->middleware('can:update,ticket')
+        ->whereNumber('ticket');
+
+    Route::post('/{ticket}/triage-reject', [TriageController::class, 'reject'])
+        ->middleware('can:update,ticket')
+        ->whereNumber('ticket');
+
     // Example policy smoke route (safe no-op) to validate wiring
     Route::get('/_policy-smoke', function () {
         return response()->json(['ok' => true]);
