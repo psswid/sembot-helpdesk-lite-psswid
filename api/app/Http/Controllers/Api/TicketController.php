@@ -7,6 +7,7 @@ use App\Http\Requests\Ticket\IndexTicketRequest;
 use App\Http\Requests\Ticket\StoreTicketRequest;
 use App\Http\Resources\TicketCollection;
 use App\Http\Resources\TicketResource;
+use App\Http\Resources\TicketDetailResource;
 use App\Enums\TicketStatus;
 use App\Models\Ticket;
 use App\Models\User;
@@ -61,5 +62,22 @@ class TicketController extends Controller
         return (new TicketResource($ticket))
             ->response()
             ->setStatusCode(201);
+    }
+
+    /**
+     * GET /api/tickets/{ticket} — Show single ticket with relations and status history.
+     */
+    public function show(Ticket $ticket): TicketDetailResource
+    {
+        $ticket->load([
+            'assignee',
+            'reporter',
+            'statusChanges' => function ($q) {
+                $q->orderBy('changed_at');
+            },
+            'statusChanges.changedBy',
+        ]);
+
+        return new TicketDetailResource($ticket);
     }
 }

@@ -36,6 +36,11 @@ Route::middleware('auth:sanctum')->prefix('tickets')->group(function () {
     Route::post('/', [TicketController::class, 'store'])
         ->middleware('can:create,'.Ticket::class);
 
+    // Show: single ticket with relations and history (numeric id only to avoid shadowing static paths)
+    Route::get('/{ticket}', [TicketController::class, 'show'])
+        ->middleware('can:view,ticket')
+        ->whereNumber('ticket');
+
     // Example policy smoke route (safe no-op) to validate wiring
     Route::get('/_policy-smoke', function () {
         return response()->json(['ok' => true]);
