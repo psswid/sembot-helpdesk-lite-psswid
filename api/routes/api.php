@@ -1,11 +1,12 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ExternalUserController;
 use App\Http\Controllers\Api\TicketController;
+use App\Http\Controllers\Api\TriageController;
 use App\Models\Ticket;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 // Public auth endpoints
 Route::post('/register', [AuthController::class, 'register']);
@@ -53,6 +54,11 @@ Route::middleware('auth:sanctum')->prefix('tickets')->group(function () {
     // Status history: chronological changes for a ticket
     Route::get('/{ticket}/status-history', [TicketController::class, 'statusHistory'])
         ->middleware('can:view,ticket')
+        ->whereNumber('ticket');
+
+    // Triage suggestion endpoint
+    Route::post('/{ticket}/triage-suggest', [TriageController::class, 'suggest'])
+        ->middleware('can:update,ticket')
         ->whereNumber('ticket');
 
     // Example policy smoke route (safe no-op) to validate wiring
