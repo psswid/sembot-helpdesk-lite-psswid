@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ExternalUserController;
+use App\Models\Ticket;
 
 // Public auth endpoints
 Route::post('/register', [AuthController::class, 'register']);
@@ -23,3 +24,18 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/external-users', [ExternalUserController::class, 'index']);
 Route::post('/external-users/sync', [ExternalUserController::class, 'sync'])
     ->middleware('auth:sanctum');
+
+// Ticket authorization layer (policies) — to be used by EPIC 3 CRUD endpoints
+Route::middleware('auth:sanctum')->prefix('tickets')->group(function () {
+    // Example policy smoke route (safe no-op) to validate wiring
+    Route::get('/_policy-smoke', function () {
+        return response()->json(['ok' => true]);
+    })->middleware('can:viewAny,'.Ticket::class);
+
+    // When wiring CRUD, apply policy middleware like:
+    // index:   ->middleware('can:viewAny,'.Ticket::class)
+    // store:   ->middleware('can:create,'.Ticket::class)
+    // show:    ->middleware('can:view,ticket')          // with {ticket} binding
+    // update:  ->middleware('can:update,ticket')        // with {ticket} binding
+    // delete:  ->middleware('can:delete,ticket')        // with {ticket} binding
+});

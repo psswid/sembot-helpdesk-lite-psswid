@@ -50,4 +50,21 @@ class Ticket extends Model
     {
         return $this->hasMany(TicketStatusChange::class);
     }
+
+    /**
+     * Scope: tickets visible to the given user according to role rules.
+     */
+    public function scopeVisibleTo($query, User $user)
+    {
+        if ($user->hasRole(['admin', 'agent'])) {
+            return $query;
+        }
+
+        if ($user->hasRole('reporter')) {
+            return $query->where('reporter_id', $user->id);
+        }
+
+        // No role: return empty result set for safety
+        return $query->whereRaw('1 = 0');
+    }
 }
