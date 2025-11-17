@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ExternalUserController;
 
 // Public auth endpoints
 Route::post('/register', [AuthController::class, 'register']);
@@ -17,3 +18,8 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 });
+
+// External users integration (JSONPlaceholder)
+Route::get('/external-users', [ExternalUserController::class, 'index']);
+Route::post('/external-users/sync', [ExternalUserController::class, 'sync'])
+    ->middleware('auth:sanctum');
