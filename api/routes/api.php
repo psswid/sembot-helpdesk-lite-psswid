@@ -32,6 +32,11 @@ Route::middleware('auth:sanctum')->prefix('tickets')->group(function () {
         return response()->json(['ok' => true]);
     })->middleware('can:viewAny,'.Ticket::class);
 
+    // Role middleware smoke route: allow agents and admins only
+    Route::get('/_agent-smoke', function () {
+        return response()->json(['ok' => true, 'role' => 'agent|admin']);
+    })->middleware('role:agent,admin');
+
     // When wiring CRUD, apply policy middleware like:
     // index:   ->middleware('can:viewAny,'.Ticket::class)
     // store:   ->middleware('can:create,'.Ticket::class)
