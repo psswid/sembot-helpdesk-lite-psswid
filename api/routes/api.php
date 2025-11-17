@@ -46,9 +46,8 @@ Route::middleware('auth:sanctum')->prefix('tickets')->group(function () {
         ->middleware('can:update,ticket')
         ->whereNumber('ticket');
 
-    // Destroy: soft delete ticket (admin-only via policy)
+    // Destroy: soft delete ticket (admin-only enforced in controller via policy)
     Route::delete('/{ticket}', [TicketController::class, 'destroy'])
-        ->middleware('can:delete,ticket')
         ->whereNumber('ticket');
 
     // Status history: chronological changes for a ticket

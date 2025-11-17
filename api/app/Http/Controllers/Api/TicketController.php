@@ -16,6 +16,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class TicketController extends Controller
 {
@@ -124,8 +125,9 @@ class TicketController extends Controller
     /**
      * DELETE /api/tickets/{ticket} — Soft delete a ticket (admin-only via policy).
      */
-    public function destroy(Ticket $ticket): \Illuminate\Http\JsonResponse
+    public function destroy(Request $request, Ticket $ticket): \Illuminate\Http\JsonResponse
     {
+        Gate::forUser($request->user())->authorize('delete', $ticket);
         $ticket->delete();
 
         return response()->json(null, 204);
