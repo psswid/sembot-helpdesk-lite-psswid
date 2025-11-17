@@ -105,4 +105,49 @@ class AuthEndpointsTest extends TestCase
             'tokenable_type' => User::class,
         ]);
     }
+
+    public function test_register_validation_errors_on_missing_fields(): void
+    {
+        $response = $this->postJson('/api/register', []);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['name', 'email', 'password']);
+    }
+
+    public function test_login_validation_error_on_missing_password(): void
+    {
+        // user exists but we purposely omit password to trigger validation
+        User::factory()->create(['email' => 'missingpass@example.com']);
+
+        $response = $this->postJson('/api/login', [
+            'email' => 'missingpass@example.com',
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['password']);
+    }
+
+    public function test_api_user_matches_me_when_authenticated(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'parity@example.com',
+        ]);
+
+        $login = $this->postJson('/api/login', [
+            'email' => 'parity@example.com',
+            'password' => 'password',
+        ])->assertOk();
+
+        $token = $login->json('token');
+
+        $me = $this->getJson('/api/me', [
+            'Authorization' => 'Bearer '.$token,
+        ])->assertOk();
+
+        $userRoute = $this->getJson('/api/user', [
+            'Authorization' => 'Bearer '.$token,
+        ])->assertOk();
+
+        $this->assertSame($me->json('email'), $userRoute->json('email'));
+    }
 }
