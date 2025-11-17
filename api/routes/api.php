@@ -51,6 +51,11 @@ Route::middleware('auth:sanctum')->prefix('tickets')->group(function () {
         ->middleware('can:delete,ticket')
         ->whereNumber('ticket');
 
+    // Status history: chronological changes for a ticket
+    Route::get('/{ticket}/status-history', [TicketController::class, 'statusHistory'])
+        ->middleware('can:view,ticket')
+        ->whereNumber('ticket');
+
     // Example policy smoke route (safe no-op) to validate wiring
     Route::get('/_policy-smoke', function () {
         return response()->json(['ok' => true]);

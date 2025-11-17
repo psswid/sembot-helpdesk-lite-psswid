@@ -9,6 +9,7 @@ use App\Http\Requests\Ticket\UpdateTicketRequest;
 use App\Http\Resources\TicketCollection;
 use App\Http\Resources\TicketResource;
 use App\Http\Resources\TicketDetailResource;
+use App\Http\Resources\TicketStatusChangeResource;
 use App\Enums\TicketStatus;
 use App\Models\Ticket;
 use App\Models\User;
@@ -128,5 +129,18 @@ class TicketController extends Controller
         $ticket->delete();
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * GET /api/tickets/{ticket}/status-history — List status changes chronologically.
+     */
+    public function statusHistory(Ticket $ticket)
+    {
+        $changes = $ticket->statusChanges()
+            ->with('changedBy')
+            ->orderBy('changed_at')
+            ->get();
+
+        return TicketStatusChangeResource::collection($changes);
     }
 }
