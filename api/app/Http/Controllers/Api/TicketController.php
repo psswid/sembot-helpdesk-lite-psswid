@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Ticket\IndexTicketRequest;
 use App\Http\Requests\Ticket\StoreTicketRequest;
+use App\Http\Requests\Ticket\UpdateTicketRequest;
 use App\Http\Resources\TicketCollection;
 use App\Http\Resources\TicketResource;
 use App\Http\Resources\TicketDetailResource;
@@ -13,6 +14,7 @@ use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TicketController extends Controller
 {
@@ -79,5 +81,42 @@ class TicketController extends Controller
         ]);
 
         return new TicketDetailResource($ticket);
+    }
+
+    /**
+     * PUT/PATCH /api/tickets/{ticket} — Update ticket and record status changes.
+     */
+    public function update(UpdateTicketRequest $request, Ticket $ticket): TicketResource
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        $validated = $request->validated();
+
+        // Capture old status (raw string) before any changes
+        $oldStatus = $ticket->getOriginal('status');
+
+        DB::transaction(function () use ($ticket, $validated, $oldStatus, $user) {
+            // Only fill provided keys to avoid unintended overwrites
+            $ticket->fill($validated);
+            $ticket->save();
+
+            // If status provided and changed, record history
+            if (array_key_exists('status', $validated)) {
+                $newStatus = $validated['status'];
+                if ($newStatus !== $oldStatus) {
+                    $ticket->statusChanges()->create([
+                        'old_status' => $oldStatus,
+                        'new_status' => $newStatus,
+                        'changed_by_user_id' => $user->id,
+                        'changed_at' => now(),
+                    ]);
+                }
+            }
+        });
+
+        $ticket->load(['assignee', 'reporter']);
+
+        return new TicketResource($ticket);
     }
 }

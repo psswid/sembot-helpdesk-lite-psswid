@@ -41,6 +41,11 @@ Route::middleware('auth:sanctum')->prefix('tickets')->group(function () {
         ->middleware('can:view,ticket')
         ->whereNumber('ticket');
 
+    // Update: modify ticket and record status changes
+    Route::match(['put', 'patch'], '/{ticket}', [TicketController::class, 'update'])
+        ->middleware('can:update,ticket')
+        ->whereNumber('ticket');
+
     // Example policy smoke route (safe no-op) to validate wiring
     Route::get('/_policy-smoke', function () {
         return response()->json(['ok' => true]);
