@@ -119,4 +119,14 @@ class TicketController extends Controller
 
         return new TicketResource($ticket);
     }
+
+    /**
+     * DELETE /api/tickets/{ticket} — Soft delete a ticket (admin-only via policy).
+     */
+    public function destroy(Ticket $ticket): \Illuminate\Http\JsonResponse
+    {
+        $ticket->delete();
+
+        return response()->json(null, 204);
+    }
 }

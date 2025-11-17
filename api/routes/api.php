@@ -46,6 +46,11 @@ Route::middleware('auth:sanctum')->prefix('tickets')->group(function () {
         ->middleware('can:update,ticket')
         ->whereNumber('ticket');
 
+    // Destroy: soft delete ticket (admin-only via policy)
+    Route::delete('/{ticket}', [TicketController::class, 'destroy'])
+        ->middleware('can:delete,ticket')
+        ->whereNumber('ticket');
+
     // Example policy smoke route (safe no-op) to validate wiring
     Route::get('/_policy-smoke', function () {
         return response()->json(['ok' => true]);
