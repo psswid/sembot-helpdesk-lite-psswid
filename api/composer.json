@@ -10,6 +10,7 @@
         "laravel/framework": "^11.31",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
+        "maestroerror/laragent": "^0.8.0",
         "spatie/laravel-permission": "^6.23"
     },
     "require-dev": {
