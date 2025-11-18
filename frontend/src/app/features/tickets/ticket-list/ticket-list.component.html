@@ -1,0 +1,82 @@
+<section class="list-container" [attr.aria-busy]="isLoading()">
+  <header class="list-header">
+    <h1 class="title">Tickets</h1>
+
+    <form class="filters" novalidate [formGroup]="form" (ngSubmit)="applyFilters()">
+      <label>
+        <span>Status</span>
+        <select formControlName="status" aria-label="Filter by status">
+          <option value="">Any</option>
+          @for (s of STATUS_OPTIONS; track s) {
+            <option [value]="s">{{ s }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        <span>Priority</span>
+        <select formControlName="priority" aria-label="Filter by priority">
+          <option value="">Any</option>
+          @for (p of PRIORITY_OPTIONS; track p) {
+            <option [value]="p">{{ p }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        <span>Assignee ID</span>
+        <input formControlName="assignee_id" type="number" inputmode="numeric" min="1" placeholder="e.g. 3" aria-label="Filter by assignee id" />
+      </label>
+
+      <label class="tags">
+        <span>Tags</span>
+        <input formControlName="tags" type="text" placeholder="comma separated" aria-label="Filter by tags" />
+      </label>
+
+      <div class="actions">
+        <button type="submit" [disabled]="isLoading()">Apply</button>
+        <button type="button" [disabled]="isLoading()" (click)="resetFilters()">Reset</button>
+      </div>
+    </form>
+  </header>
+
+  @if (error(); as err) {
+    <p class="error" role="alert" aria-live="polite">{{ err }}</p>
+  }
+
+  @if (isLoading()) {
+    <p class="loading" aria-live="polite">Loading…</p>
+  }
+
+  <div class="table-wrap">
+    <table role="table" class="table">
+      <caption class="sr-only">Tickets list</caption>
+      <thead>
+        <tr>
+          <th scope="col">Title</th>
+          <th scope="col">Priority</th>
+          <th scope="col">Status</th>
+          <th scope="col">Assignee</th>
+          <th scope="col">Updated</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (t of tickets.refinedTickets(); track t.id) {
+          <tr aria-label="Open ticket {{ t.title }}" class="row-link" tabindex="0" role="button" [routerLink]="['/tickets', t.id]" (click)="$event.preventDefault();">
+            <td class="title-cell">{{ t.title }}</td>
+            <td class="prio" [class.low]="t.priority==='low'" [class.medium]="t.priority==='medium'" [class.high]="t.priority==='high'">{{ t.priority }}</td>
+            <td class="status">{{ t.status }}</td>
+            <td class="assignee">{{ t.assignee?.name || '—' }}</td>
+            <td class="updated">{{ t.updated_at }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="pagination">
+    <button type="button" aria-label="Previous page" [disabled]="!hasPrev() || isLoading()" (click)="prevPage()">Prev</button>
+    <span class="page-info">Page {{ page() }} of {{ lastPage() }} ({{ total() }} total)</span>
+    <button type="button" aria-label="Next page" [disabled]="!hasNext() || isLoading()" (click)="nextPage()">Next</button>
+  </footer>
+</section>
