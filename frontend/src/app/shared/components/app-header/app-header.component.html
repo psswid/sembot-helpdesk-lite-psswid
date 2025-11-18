@@ -1,0 +1,17 @@
+<header>
+  <div class="brand">
+    <a routerLink="/tickets" class="logo" aria-label="Go to tickets">Helpdesk</a>
+    <button type="button"
+            class="menu-toggle"
+            aria-label="Toggle menu"
+            [attr.aria-expanded]="menuOpen()"
+            aria-controls="mainnav"
+            (click)="toggleMenu()">
+      ☰
+    </button>
+  </div>
+  <nav id="mainnav" role="navigation" [class.open]="menuOpen()">
+    <a routerLink="/tickets" (click)="closeMenu()">Tickets</a>
+    <a routerLink="/tickets/new" (click)="closeMenu()">New Ticket</a>
+  </nav>
+</header>
