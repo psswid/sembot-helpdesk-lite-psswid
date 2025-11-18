@@ -2,6 +2,7 @@ import { inject, Injectable, computed, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { apiUrl, parseHttpError, parseWith } from '../api/api.util';
+import { NotificationService } from './notification.service';
 import { z } from 'zod';
 import {
   TicketSchema,
@@ -38,6 +39,7 @@ export type UpdateTicketDto = Partial<Omit<CreateTicketDto, 'title' | 'priority'
 @Injectable({ providedIn: 'root' })
 export class TicketService {
   private readonly http = inject(HttpClient);
+  private readonly notify = inject(NotificationService);
 
   // State signals
   readonly tickets = signal<readonly Ticket[]>([]);
@@ -118,6 +120,7 @@ export class TicketService {
     } catch (e) {
       const { message } = parseHttpError(e);
       this.error.set(message);
+      this.notify.error(message);
     } finally {
       this.loading.set(false);
     }
@@ -143,6 +146,7 @@ export class TicketService {
     } catch (e) {
       const { message } = parseHttpError(e);
       this.error.set(message);
+      this.notify.error(message);
       return null;
     } finally {
       this.loading.set(false);
@@ -173,6 +177,7 @@ export class TicketService {
     } catch (e) {
       const { message } = parseHttpError(e);
       this.error.set(message);
+      this.notify.error(message);
       return null;
     } finally {
       this.loading.set(false);
@@ -228,6 +233,7 @@ export class TicketService {
       this.tickets.set(prev);
       const { message } = parseHttpError(e);
       this.error.set(message);
+      this.notify.error(message);
       return false;
     } finally {
       this.loading.set(false);
@@ -246,6 +252,7 @@ export class TicketService {
     } catch (e) {
       const { message } = parseHttpError(e);
       this.error.set(message);
+      this.notify.error(message);
       return null;
     } finally {
       this.loading.set(false);

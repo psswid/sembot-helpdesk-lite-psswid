@@ -10,7 +10,9 @@
   </header>
 
   @if (error(); as err) {
-    <p class="error" role="alert" aria-live="polite">{{ err }}</p>
+    <p class="error" role="alert" aria-live="polite">{{ err }}
+      <button type="button" [disabled]="loading()" (click)="retry()">Retry</button>
+    </p>
   }
 
   @if (loading()) {

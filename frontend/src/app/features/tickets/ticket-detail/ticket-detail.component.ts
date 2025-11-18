@@ -47,4 +47,10 @@ export class TicketDetailComponent {
     await this.tickets.getTicket(id);
     await this.tickets.loadStatusHistory(id);
   }
+
+  async retry(): Promise<void> {
+    const id = this.ticketId();
+    if (!id) return;
+    await this.load(id);
+  }
 }

@@ -41,7 +41,9 @@
   </header>
 
   @if (error(); as err) {
-    <p class="error" role="alert" aria-live="polite">{{ err }}</p>
+    <p class="error" role="alert" aria-live="polite">{{ err }}
+      <button type="button" [disabled]="isLoading()" (click)="tickets.getTickets()">Retry</button>
+    </p>
   }
 
   @if (isLoading()) {
@@ -68,6 +70,11 @@
             <td class="status">{{ t.status }}</td>
             <td class="assignee">{{ t.assignee?.name || '—' }}</td>
             <td class="updated">{{ t.updated_at }}</td>
+          </tr>
+        }
+        @if (!isLoading() && tickets.refinedTickets().length === 0) {
+          <tr>
+            <td colspan="5">No tickets found.</td>
           </tr>
         }
       </tbody>

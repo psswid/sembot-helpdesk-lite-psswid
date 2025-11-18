@@ -1,0 +1,11 @@
+<div class="toasts">
+  @for (n of notifications.items(); track n.id) {
+    <div class="toast" role="status" [class.success]="n.type==='success'" [class.error]="n.type==='error'" [class.info]="n.type==='info'">
+      <span class="msg">{{ n.message }}</span>
+      <button type="button" class="close" aria-label="Dismiss" (click)="close(n.id)">×</button>
+    </div>
+  }
+  @if (notifications.items().length === 0) {
+    <span class="sr-only">No notifications</span>
+  }
+</div>

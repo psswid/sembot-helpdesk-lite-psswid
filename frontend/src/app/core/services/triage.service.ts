@@ -5,6 +5,7 @@ import { apiUrl, parseHttpError, parseWith } from '../api/api.util';
 import { TriageSuggestionSchema, type TriageSuggestion } from '../models/triage-suggestion.model';
 import { TicketSchema, type Ticket } from '../models/ticket.model';
 import { TicketService } from './ticket.service';
+import { NotificationService } from './notification.service';
 
 export type AcceptPatch = {
   priority: Ticket['priority'];
@@ -17,6 +18,7 @@ export type AcceptPatch = {
 export class TriageService {
   private readonly http = inject(HttpClient);
   private readonly tickets = inject(TicketService);
+  private readonly notify = inject(NotificationService);
 
   readonly suggestion = signal<TriageSuggestion | null>(null);
   readonly loading = signal(false);
@@ -34,6 +36,7 @@ export class TriageService {
     } catch (e) {
       const { message } = parseHttpError(e);
       this.error.set(message);
+      this.notify.error(message);
       this.suggestion.set(null);
       return null;
     } finally {
@@ -58,10 +61,12 @@ export class TriageService {
         this.tickets.tickets.set(next);
       }
       this.suggestion.set(null);
+      this.notify.success('Triage suggestion accepted.');
       return updated;
     } catch (e) {
       const { message } = parseHttpError(e);
       this.error.set(message);
+      this.notify.error(message);
       return null;
     } finally {
       this.loading.set(false);
@@ -75,10 +80,12 @@ export class TriageService {
       const url = apiUrl(`/api/tickets/${ticketId}/triage-reject`);
       await firstValueFrom(this.http.post(url, reason ? { reason } : {}));
       this.suggestion.set(null);
+      this.notify.info('Triage suggestion rejected.');
       return true;
     } catch (e) {
       const { message } = parseHttpError(e);
       this.error.set(message);
+      this.notify.error(message);
       return false;
     } finally {
       this.loading.set(false);
