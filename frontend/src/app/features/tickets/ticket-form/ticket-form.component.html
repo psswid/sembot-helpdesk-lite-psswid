@@ -6,8 +6,8 @@
 
   @if (isEdit() && canAssign()) {
     <app-triage-suggestion-panel
-      [ticketId]="id()"
       mode="inline"
+      [ticketId]="id()"
       [canAct]="canAssign()"
       (suggested)="onSuggested()"
       (acceptRequested)="acceptTriage()"

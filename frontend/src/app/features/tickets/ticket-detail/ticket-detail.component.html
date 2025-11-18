@@ -35,7 +35,7 @@
     </section>
 
     @if (canEdit()) {
-      <app-triage-suggestion-panel [ticketId]="ticketId()" mode="form" [canAct]="canEdit()"></app-triage-suggestion-panel>
+      <app-triage-suggestion-panel mode="form" [ticketId]="ticketId()" [canAct]="canEdit()"></app-triage-suggestion-panel>
     }
 
     @if (t.external?.weather; as weather) {

@@ -1,17 +1,36 @@
 <header>
   <div class="brand">
     <a routerLink="/tickets" class="logo" aria-label="Go to tickets">Helpdesk</a>
-    <button type="button"
-            class="menu-toggle"
-            aria-label="Toggle menu"
-            [attr.aria-expanded]="menuOpen()"
-            aria-controls="mainnav"
-            (click)="toggleMenu()">
+        <button type="button"
+          class="menu-toggle"
+          aria-label="Toggle menu"
+          aria-controls="mainnav"
+          [attr.aria-expanded]="menuOpen()"
+          (click)="toggleMenu()">
       ☰
     </button>
   </div>
   <nav id="mainnav" role="navigation" [class.open]="menuOpen()">
-    <a routerLink="/tickets" (click)="closeMenu()">Tickets</a>
-    <a routerLink="/tickets/new" (click)="closeMenu()">New Ticket</a>
+     <a #rlaList="routerLinkActive"
+       routerLink="/tickets"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{ exact: true }"
+       [attr.aria-current]="rlaList.isActive ? 'page' : null"
+       (click)="closeMenu()">Tickets</a>
+     <a #rlaNew="routerLinkActive"
+       routerLink="/tickets/new"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{ exact: true }"
+       [attr.aria-current]="rlaNew.isActive ? 'page' : null"
+       (click)="closeMenu()">New Ticket</a>
+
+     @if (auth.currentUser()) {
+       <span class="user" aria-label="Current user">
+         {{ auth.currentUser()!.name }} ({{ auth.currentUser()!.role }})
+       </span>
+       <button type="button" class="logout-btn" (click)="logout()">Logout</button>
+     } @else {
+       <a routerLink="/login" (click)="closeMenu()">Login</a>
+     }
   </nav>
 </header>
