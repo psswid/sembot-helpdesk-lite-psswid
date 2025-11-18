@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
-import { rootRedirectGuard } from './core/guards/root-redirect.guard';
+// Root redirect handled via a tiny component instead of guards
 
 export const routes: Routes = [
+	// Dynamic default handled in component to avoid canMatch + redirectTo conflict
 	{
 		path: '',
 		pathMatch: 'full',
-		canActivate: [rootRedirectGuard],
-		// Guard will return a UrlTree to /login or /tickets
+		loadComponent: () => import('./features/redirect/landing-redirect.component').then(m => m.LandingRedirectComponent)
 	},
 	{
 		path: 'login',

@@ -10,7 +10,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const notify = inject(NotificationService);
 
-  const token = auth.token();
+  // Bearer token (Sanctum Personal Access Tokens)
+  const token = auth.token() || (() => {
+    try {
+      return localStorage.getItem('auth.token');
+    } catch {
+      return null;
+    }
+  })();
   const authReq = token ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
 
   return next(authReq).pipe(
