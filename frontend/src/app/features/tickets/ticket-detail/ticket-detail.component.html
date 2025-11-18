@@ -1,0 +1,73 @@
+<section class="detail" [attr.aria-busy]="loading()">
+  <header class="header">
+    <a routerLink="/tickets" class="back">← Back to tickets</a>
+    @if (ticket(); as t) {
+      <h1 class="title">{{ t.title }}</h1>
+      @if (canEdit()) {
+        <a class="edit" [routerLink]="['/tickets', t.id, 'edit']">Edit</a>
+      }
+    }
+  </header>
+
+  @if (error(); as err) {
+    <p class="error" role="alert" aria-live="polite">{{ err }}</p>
+  }
+
+  @if (loading()) {
+    <p class="loading" aria-live="polite">Loading…</p>
+  }
+
+  @if (ticket(); as t) {
+    <div class="meta">
+      <div><strong>Status:</strong> {{ t.status }}</div>
+      <div><strong>Priority:</strong> <span [class.low]="t.priority==='low'" [class.medium]="t.priority==='medium'" [class.high]="t.priority==='high'">{{ t.priority }}</span></div>
+      <div><strong>Assignee:</strong> {{ t.assignee?.name || '—' }}</div>
+      <div><strong>Reporter:</strong> {{ t.reporter?.name || ('#' + t.reporter_id) }}</div>
+      <div><strong>Tags:</strong> {{ t.tags.length ? t.tags.join(', ') : '—' }}</div>
+      <div><strong>Location:</strong> {{ t.location || '—' }}</div>
+      <div><strong>Created:</strong> {{ t.created_at }}</div>
+      <div><strong>Updated:</strong> {{ t.updated_at }}</div>
+    </div>
+
+    <section class="description">
+      <h2>Description</h2>
+      <p>{{ t.description }}</p>
+    </section>
+
+    @if (t.external?.weather; as weather) {
+      <section class="external">
+        <h2>Weather</h2>
+        <details>
+          <summary>Show raw weather data</summary>
+          <pre>{{ weather | json }}</pre>
+        </details>
+      </section>
+    }
+
+    <section class="history">
+      <h2>Status History</h2>
+      @if (history().length === 0) {
+        <p>No status changes yet.</p>
+      } @else {
+        <ol class="timeline">
+          @for (h of history(); track h.id) {
+            <li>
+              <div class="dot" aria-hidden="true"></div>
+              <div class="content">
+                <div class="row">
+                  <strong>{{ h.old_status || '—' }}</strong>
+                  <span>→</span>
+                  <strong>{{ h.new_status }}</strong>
+                </div>
+                <div class="row small">
+                  <span>{{ h.changed_at }}</span>
+                  <span>by {{ h.changed_by?.name || ('#' + h.changed_by_user_id) }}</span>
+                </div>
+              </div>
+            </li>
+          }
+        </ol>
+      }
+    </section>
+  }
+</section>

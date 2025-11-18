@@ -1,0 +1,26 @@
+.ticket-detail-page { padding: 1.5rem; }
+.header { display: flex; gap: 1rem; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.header .title { margin: 0; font-size: 1.5rem; }
+.header .back { text-decoration: none; color: #2563eb; }
+.header .edit { text-decoration: none; background: #2563eb; color: white; padding: 0.4rem 0.6rem; border-radius: 6px; }
+
+.meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem 1rem; margin-bottom: 1rem; }
+.description { margin-bottom: 1rem; }
+.external { margin-bottom: 1rem; }
+
+.history .timeline { list-style: none; margin: 0; padding: 0; border-left: 2px solid #e5e7eb; }
+.history .timeline li { position: relative; padding: 0.5rem 0 0.5rem 1rem; }
+.history .timeline .dot { position: absolute; left: -6px; top: 0.9rem; width: 10px; height: 10px; background: #2563eb; border-radius: 50%; }
+.history .timeline .row { display: flex; gap: 0.5rem; align-items: baseline; }
+.history .timeline .row.small { font-size: 0.85rem; color: #374151; }
+
+.prio.low { color: #065f46; }
+.prio.medium { color: #92400e; }
+.prio.high { color: #991b1b; font-weight: 600; }
+
+.loading { margin: 0.5rem 0; }
+.error { color: #b00020; margin: 0.5rem 0; }
+
+@container (max-width: 768px) {
+  .meta { grid-template-columns: 1fr; }
+}

@@ -30,7 +30,7 @@ export const routes: Routes = [
 		path: 'tickets/:id',
 		canActivate: [authGuard],
 		loadComponent: () =>
-			import('./features/tickets/tickets-shell.component').then((m) => m.TicketsShellComponent)
+			import('./features/tickets/ticket-detail/ticket-detail.component').then((m) => m.TicketDetailComponent)
 	},
 	{
 		path: 'tickets/:id/edit',
