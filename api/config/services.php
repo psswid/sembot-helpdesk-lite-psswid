@@ -61,4 +61,27 @@ return [
         'timeout' => (int) env('LLM_TIMEOUT', 5),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | External API (EPIC 5)
+    |--------------------------------------------------------------------------
+    |
+    | Driver-based configuration for a pluggable external data provider. The
+    | initial implementation (EPIC5-001) integrates with WeatherAPI to fetch
+    | current weather data. Future drivers (jsonplaceholder, exchangerate)
+    | can extend this without changing calling code.
+    |
+    | Supported drivers (current phase):
+    |   - weatherapi : requires API key
+    |
+    | NOTE: Secrets are never logged. Timeout kept low to avoid request
+    | contention. Retries are intentionally small for fast failover.
+    */
+    'external' => [
+        'driver' => env('EXTERNAL_API_DRIVER', 'weatherapi'),
+        'base_url' => rtrim(env('EXTERNAL_API_BASE_URL', 'https://api.weatherapi.com/v1'), '/'),
+        'api_key' => env('EXTERNAL_API_KEY', env('WEATHER_API_KEY')),
+        'timeout' => (int) env('EXTERNAL_API_TIMEOUT', 5),
+    ],
+
 ];
