@@ -82,6 +82,7 @@ return [
         'base_url' => rtrim(env('EXTERNAL_API_BASE_URL', 'https://api.weatherapi.com/v1'), '/'),
         'api_key' => env('EXTERNAL_API_KEY', env('WEATHER_API_KEY')),
         'timeout' => (int) env('EXTERNAL_API_TIMEOUT', 5),
+        'cache_ttl' => (int) env('EXTERNAL_API_CACHE_TTL', 3600), // seconds
     ],
 
 ];
