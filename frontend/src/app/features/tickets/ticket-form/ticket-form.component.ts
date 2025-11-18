@@ -4,12 +4,14 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TicketService } from '../../../core/services/ticket.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { TicketPriority } from '../../../core/models/ticket.model';
+import { TriageService } from '../../../core/services/triage.service';
+import { TriageSuggestionPanelComponent } from '../../../shared/components/triage-suggestion-panel/triage-suggestion-panel.component';
 
 const PRIORITY_OPTIONS: TicketPriority[] = ['low', 'medium', 'high'];
 
 @Component({
   selector: 'app-ticket-form',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, TriageSuggestionPanelComponent],
   templateUrl: './ticket-form.component.html',
   styleUrl: './ticket-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,6 +23,7 @@ export class TicketFormComponent {
   private readonly router = inject(Router);
   protected readonly tickets = inject(TicketService);
   private readonly auth = inject(AuthService);
+  protected readonly triage = inject(TriageService);
 
   readonly id = signal<number | null>(null);
   readonly loading = signal(false);
@@ -68,6 +71,37 @@ export class TicketFormComponent {
         .finally(() => this.loading.set(false));
     }
   }
+
+  async onSuggested(): Promise<void> {
+    const s = this.triage.suggestion();
+    if (s) {
+      this.form.patchValue(
+        {
+          priority: s.priority as any,
+          tags: (s.tags ?? []).join(', '),
+        },
+        { emitEvent: false }
+      );
+    }
+  }
+
+  async acceptTriage(): Promise<void> {
+    const id = this.id();
+    if (!id || this.triage.loading()) return;
+    const raw = this.form.getRawValue();
+    const tags = raw.tags ? raw.tags.split(',').map((t) => t.trim()).filter(Boolean) : [];
+    const assignee_id = raw.assignee_id ? Number(raw.assignee_id) : undefined;
+    const updated = await this.triage.acceptSuggestion(id, {
+      priority: raw.priority as any,
+      tags: tags.length ? tags : undefined,
+      assignee_id: Number.isFinite(assignee_id) ? assignee_id! : undefined,
+    });
+    if (updated) {
+      await this.router.navigate(['/tickets', updated.id]);
+    }
+  }
+
+  // Reject is handled inside the panel for inline mode
 
   async onSubmit(): Promise<void> {
     if (this.form.invalid || this.loading()) {

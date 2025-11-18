@@ -1,0 +1,11 @@
+:host { display: block; margin: 0 0 1rem 0; }
+.triage { margin: 0; }
+.triage .triage-actions { display: flex; gap: 0.5rem; margin: 0.5rem 0; }
+.triage .hint { margin: 0.25rem 0; color: #374151; }
+.triage .confidence { font-size: 0.85rem; color: #6b7280; }
+.triage .suggestion { border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.75rem; }
+.triage .accept { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem 1rem; margin-top: 0.5rem; }
+.triage .accept label { display: grid; gap: 0.25rem; font-size: 0.9rem; }
+.triage .accept label.wide { grid-column: span 2; }
+.triage .accept .actions { grid-column: span 2; display: flex; gap: 0.5rem; }
+.error { color: #b00020; margin: 0.5rem 0; }

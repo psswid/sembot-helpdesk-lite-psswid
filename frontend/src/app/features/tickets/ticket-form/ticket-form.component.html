@@ -4,6 +4,16 @@
     <h1 class="title">@if (isEdit()) { Edit Ticket } @else { New Ticket }</h1>
   </header>
 
+  @if (isEdit() && canAssign()) {
+    <app-triage-suggestion-panel
+      [ticketId]="id()"
+      mode="inline"
+      [canAct]="canAssign()"
+      (suggested)="onSuggested()"
+      (acceptRequested)="acceptTriage()"
+    ></app-triage-suggestion-panel>
+  }
+
   @if (error(); as err) {
     <p class="error" role="alert" aria-live="polite">{{ err }}</p>
   }
