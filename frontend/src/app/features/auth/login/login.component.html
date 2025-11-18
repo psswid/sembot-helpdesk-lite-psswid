@@ -1,0 +1,45 @@
+<section class="login">
+  <h1>Login</h1>
+
+  @if (error()) {
+    <p class="error" role="alert" aria-live="polite">{{ error() }}</p>
+  }
+
+  <form novalidate [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="field">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        autocomplete="email"
+        required
+        [attr.aria-invalid]="emailInvalid() ? 'true' : null"
+        [disabled]="loading()"
+      />
+      @if (emailInvalid()) {
+        <small class="hint">Enter a valid email.</small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="password">Password</label>
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        minlength="6"
+        autocomplete="current-password"
+        required
+        [disabled]="loading()"
+      />
+      @if (passwordInvalid()) {
+        <small class="hint">Minimum length is 6 characters.</small>
+      }
+    </div>
+
+    <button type="submit" [disabled]="loading() || form.invalid">
+      {{ loading() ? 'Signing in…' : 'Sign in' }}
+    </button>
+  </form>
+</section>
