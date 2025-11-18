@@ -29,6 +29,7 @@ class UpdateTicketRequest extends FormRequest
             'priority' => ['sometimes', 'string', Rule::in($priorityValues)],
             'status' => ['sometimes', 'string', Rule::in($statusValues)],
             'assignee_id' => ['sometimes', 'nullable', 'integer', 'exists:users,id'],
+            'location' => ['sometimes', 'string', 'max:120'],
             'tags' => ['sometimes', 'array'],
             'tags.*' => ['string'],
         ];

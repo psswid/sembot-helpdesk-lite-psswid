@@ -19,6 +19,7 @@ class TicketDetailResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
+            'location' => $this->location,
             'priority' => is_object($priority) && method_exists($priority, 'value') ? $priority->value : $priority,
             'status' => is_object($status) && method_exists($status, 'value') ? $status->value : $status,
             'assignee' => $this->whenLoaded('assignee', function () {
@@ -50,6 +51,7 @@ class TicketDetailResource extends JsonResource
                     ];
                 })->values();
             }),
+            'external' => $this->when(isset($this->external), $this->external),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

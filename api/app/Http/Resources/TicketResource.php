@@ -21,6 +21,7 @@ class TicketResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
+            'location' => $this->location,
             'priority' => is_object($priority) && method_exists($priority, 'value') ? $priority->value : $priority,
             'status' => is_object($status) && method_exists($status, 'value') ? $status->value : $status,
             'assignee' => $this->whenLoaded('assignee', function () {

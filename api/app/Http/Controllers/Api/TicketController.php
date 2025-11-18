@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\TicketStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Ticket\IndexTicketRequest;
 use App\Http\Requests\Ticket\StoreTicketRequest;
 use App\Http\Requests\Ticket\UpdateTicketRequest;
 use App\Http\Resources\TicketCollection;
-use App\Http\Resources\TicketResource;
 use App\Http\Resources\TicketDetailResource;
+use App\Http\Resources\TicketResource;
 use App\Http\Resources\TicketStatusChangeResource;
-use App\Enums\TicketStatus;
 use App\Models\Ticket;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
+use App\Services\ExternalApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -58,6 +58,7 @@ class TicketController extends Controller
             'priority' => $validated['priority'],
             'status' => TicketStatus::Open->value,
             'reporter_id' => $user->id,
+            'location' => $validated['location'] ?? null,
             'tags' => $validated['tags'] ?? null,
         ]);
 
@@ -71,7 +72,7 @@ class TicketController extends Controller
     /**
      * GET /api/tickets/{ticket} — Show single ticket with relations and status history.
      */
-    public function show(Ticket $ticket): TicketDetailResource
+    public function show(Ticket $ticket, ExternalApiService $external): TicketDetailResource
     {
         $ticket->load([
             'assignee',
@@ -81,6 +82,12 @@ class TicketController extends Controller
             },
             'statusChanges.changedBy',
         ]);
+        if (! empty($ticket->location)) {
+            $weather = $external->currentWeather($ticket->location);
+            $ticket->setAttribute('external', [
+                'weather' => $weather,
+            ]);
+        }
 
         return new TicketDetailResource($ticket);
     }

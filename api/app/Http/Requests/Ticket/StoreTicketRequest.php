@@ -25,6 +25,7 @@ class StoreTicketRequest extends FormRequest
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'priority' => ['required', 'string', Rule::in($priorityValues)],
+            'location' => ['sometimes', 'string', 'max:120'],
             'tags' => ['sometimes', 'array'],
             'tags.*' => ['string'],
             // reporter_id is set server-side; ignore any client provided value

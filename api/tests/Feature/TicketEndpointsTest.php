@@ -7,6 +7,7 @@ use App\Models\Ticket;
 use App\Models\TicketStatusChange;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class TicketEndpointsTest extends TestCase
@@ -84,6 +85,7 @@ class TicketEndpointsTest extends TestCase
             'title' => 'New issue',
             'description' => 'Something is wrong',
             'priority' => 'medium',
+            'location' => 'New York',
             'tags' => ['bug'],
         ];
 
@@ -91,12 +93,13 @@ class TicketEndpointsTest extends TestCase
             'Authorization' => 'Bearer '.$token,
         ])->assertCreated();
 
-    $id = $res->json('data.id');
+        $id = $res->json('data.id');
 
         $this->assertDatabaseHas('tickets', [
             'id' => $id,
             'reporter_id' => $reporter->id,
             'status' => 'open',
+            'location' => 'New York',
         ]);
     }
 
@@ -112,6 +115,7 @@ class TicketEndpointsTest extends TestCase
         $ticket = Ticket::factory()->create([
             'reporter_id' => $reporter->id,
             'status' => 'open',
+            'location' => 'New York',
         ]);
 
         // Two status changes in order
@@ -130,15 +134,26 @@ class TicketEndpointsTest extends TestCase
             'changed_at' => now(),
         ]);
 
+        // Fake WeatherAPI for current weather call
+        Http::fake([
+            'api.weatherapi.com/*' => Http::response([
+                'location' => ['name' => 'New York', 'country' => 'United States of America'],
+                'current' => ['temp_c' => 20.0],
+            ], 200),
+        ]);
+
         $res = $this->getJson("/api/tickets/{$ticket->id}", [
             'Authorization' => 'Bearer '.$agentToken,
         ])->assertOk();
 
         $res->assertJsonPath('data.reporter.id', $reporter->id);
+        $res->assertJsonPath('data.location', 'New York');
         $res->assertJsonCount(2, 'data.status_history');
         $this->assertSame('in_progress', $res->json('data.status_history.0.new_status'));
         $this->assertSame('resolved', $res->json('data.status_history.1.new_status'));
         $this->assertSame($agent->id, $res->json('data.status_history.0.changed_by.id'));
+        $this->assertSame('weatherapi', $res->json('data.external.weather.meta.driver'));
+        $this->assertSame('New York', $res->json('data.external.weather.data.location.name'));
     }
 
     public function test_update_changes_status_and_writes_history(): void
