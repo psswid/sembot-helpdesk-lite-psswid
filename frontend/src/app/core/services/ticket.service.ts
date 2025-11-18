@@ -132,7 +132,8 @@ export class TicketService {
     try {
       const url = apiUrl(`/api/tickets/${id}`);
       const res = await firstValueFrom(this.http.get(url));
-      const ticket = parseWith(TicketSchema, res);
+      const payload = (res as any)?.data ?? res;
+      const ticket = parseWith(TicketSchema, payload);
       this.selectedTicket.set(ticket);
       // Update list cache if present
       const list = this.tickets();
@@ -159,14 +160,15 @@ export class TicketService {
     try {
       const url = apiUrl('/api/tickets');
       const res = await firstValueFrom(this.http.post(url, dto));
-      const created = parseWith(TicketSchema, res);
+      const payload = (res as any)?.data ?? res;
+      const created = parseWith(TicketSchema, payload);
 
       // Optimistic: prepend if it likely matches current filters
       const f = this.filters();
       const matches =
         (!f.status || f.status === created.status) &&
         (!f.priority || f.priority === created.priority) &&
-        (typeof f.assignee_id !== 'number' || f.assignee_id === created.assignee_id) &&
+        (typeof f.assignee_id !== 'number' || f.assignee_id === (created.assignee?.id ?? null)) &&
         (!f.tags || f.tags.every((tag) => created.tags.includes(tag)));
       if (matches) this.tickets.set([created, ...this.tickets()]);
 
@@ -190,7 +192,8 @@ export class TicketService {
     try {
       const url = apiUrl(`/api/tickets/${id}`);
       const res = await firstValueFrom(this.http.patch(url, dto));
-      const updated = parseWith(TicketSchema, res);
+      const payload = (res as any)?.data ?? res;
+      const updated = parseWith(TicketSchema, payload);
 
       // Update selected and list cache
       this.selectedTicket.set(updated);
@@ -246,7 +249,8 @@ export class TicketService {
     try {
       const url = apiUrl(`/api/tickets/${ticketId}/status-history`);
       const res = await firstValueFrom(this.http.get(url));
-      const parsed = parseWith(z.array(TicketStatusChangeSchema), res);
+      const payload = (res as any)?.data ?? res;
+      const parsed = parseWith(z.array(TicketStatusChangeSchema), payload);
       this.statusHistory.set(parsed);
       return parsed;
     } catch (e) {

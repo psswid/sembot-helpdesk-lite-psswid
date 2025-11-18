@@ -13,8 +13,6 @@ export const TicketSchema = z.object({
   description: z.string().default(''),
   priority: TicketPrioritySchema,
   status: TicketStatusSchema,
-  assignee_id: z.number().nullable(),
-  reporter_id: z.number(),
   assignee: z.custom<User | null>().optional(),
   reporter: z.custom<User>().optional(),
   tags: z.array(z.string()).default([]),

@@ -63,7 +63,7 @@ export class TicketFormComponent {
             title: t.title,
             description: t.description,
             priority: t.priority,
-            assignee_id: t.assignee_id != null ? String(t.assignee_id) : '',
+            assignee_id: t.assignee?.id != null ? String(t.assignee.id) : '',
             tags: t.tags?.join(', ') ?? '',
             location: t.location ?? ''
           }, { emitEvent: false });

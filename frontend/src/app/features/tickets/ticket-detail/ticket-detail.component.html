@@ -24,7 +24,7 @@
       <div><strong>Status:</strong> {{ t.status }}</div>
       <div><strong>Priority:</strong> <span [class.low]="t.priority==='low'" [class.medium]="t.priority==='medium'" [class.high]="t.priority==='high'">{{ t.priority }}</span></div>
       <div><strong>Assignee:</strong> {{ t.assignee?.name || '—' }}</div>
-      <div><strong>Reporter:</strong> {{ t.reporter?.name || ('#' + t.reporter_id) }}</div>
+      <div><strong>Reporter:</strong> {{ t.reporter?.name || '—' }}</div>
       <div><strong>Tags:</strong> {{ t.tags.length ? t.tags.join(', ') : '—' }}</div>
       <div><strong>Location:</strong> {{ t.location || '—' }}</div>
       <div><strong>Created:</strong> {{ t.created_at }}</div>
