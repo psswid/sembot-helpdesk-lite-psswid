@@ -97,7 +97,7 @@ export class AuthService {
     this.token.set(token);
   }
 
-  private clearSession() {
+  clearSession() {
     this.setToken(null);
     this.currentUser.set(null);
   }
