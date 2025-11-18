@@ -24,7 +24,7 @@ export const routes: Routes = [
 		path: 'tickets/new',
 		canActivate: [authGuard],
 		loadComponent: () =>
-			import('./features/tickets/tickets-shell.component').then((m) => m.TicketsShellComponent)
+			import('./features/tickets/ticket-form/ticket-form.component').then((m) => m.TicketFormComponent)
 	},
 	{
 		path: 'tickets/:id',
@@ -36,7 +36,7 @@ export const routes: Routes = [
 		path: 'tickets/:id/edit',
 		canActivate: [authGuard],
 		loadComponent: () =>
-			import('./features/tickets/tickets-shell.component').then((m) => m.TicketsShellComponent)
+			import('./features/tickets/ticket-form/ticket-form.component').then((m) => m.TicketFormComponent)
 	},
 	{ path: '**', redirectTo: '' }
 ];

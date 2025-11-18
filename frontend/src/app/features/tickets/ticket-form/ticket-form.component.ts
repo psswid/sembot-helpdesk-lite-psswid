@@ -1,0 +1,128 @@
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TicketService } from '../../../core/services/ticket.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { TicketPriority } from '../../../core/models/ticket.model';
+
+const PRIORITY_OPTIONS: TicketPriority[] = ['low', 'medium', 'high'];
+
+@Component({
+  selector: 'app-ticket-form',
+  imports: [ReactiveFormsModule, RouterLink],
+  templateUrl: './ticket-form.component.html',
+  styleUrl: './ticket-form.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'ticket-form-page' }
+})
+export class TicketFormComponent {
+  private readonly fb = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  protected readonly tickets = inject(TicketService);
+  private readonly auth = inject(AuthService);
+
+  readonly id = signal<number | null>(null);
+  readonly loading = signal(false);
+  readonly error = signal<string | null>(null);
+  readonly success = signal<string | null>(null);
+
+  readonly canAssign = computed(() => {
+    const role = this.auth.currentUser()?.role;
+    return role === 'admin' || role === 'agent';
+  });
+
+  readonly isEdit = computed(() => this.id() !== null);
+
+  readonly form = this.fb.nonNullable.group({
+    title: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(200)]),
+    description: this.fb.nonNullable.control('', [Validators.required]),
+    priority: this.fb.nonNullable.control<TicketPriority>('medium', [Validators.required]),
+    assignee_id: this.fb.control<string>(''),
+    tags: this.fb.control<string>(''),
+    location: this.fb.control<string>('')
+  });
+
+  protected readonly PRIORITY_OPTIONS = PRIORITY_OPTIONS;
+
+  constructor() {
+    const idParam = this.route.snapshot.paramMap.get('id');
+    const id = idParam ? Number(idParam) : NaN;
+    if (Number.isFinite(id) && id > 0) {
+      this.id.set(id);
+      // Load ticket for editing
+      this.loading.set(true);
+      this.tickets
+        .getTicket(id)
+        .then((t) => {
+          if (!t) return;
+          this.form.patchValue({
+            title: t.title,
+            description: t.description,
+            priority: t.priority,
+            assignee_id: t.assignee_id != null ? String(t.assignee_id) : '',
+            tags: t.tags?.join(', ') ?? '',
+            location: t.location ?? ''
+          }, { emitEvent: false });
+        })
+        .finally(() => this.loading.set(false));
+    }
+  }
+
+  async onSubmit(): Promise<void> {
+    if (this.form.invalid || this.loading()) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    this.loading.set(true);
+    this.error.set(null);
+    this.success.set(null);
+
+    const raw = this.form.getRawValue();
+    const assignee_id = raw.assignee_id ? Number(raw.assignee_id) : undefined;
+    const tags = raw.tags ? raw.tags.split(',').map((t) => t.trim()).filter(Boolean) : [];
+
+    try {
+      if (this.isEdit()) {
+        const updated = await this.tickets.updateTicket(this.id()!, {
+          title: raw.title,
+          description: raw.description,
+          priority: raw.priority,
+          assignee_id: Number.isFinite(assignee_id) ? assignee_id! : null,
+          tags,
+          location: raw.location ? raw.location : null,
+        });
+        if (updated) {
+          this.success.set('Ticket updated');
+          await this.router.navigate(['/tickets', updated.id]);
+        }
+      } else {
+        const created = await this.tickets.createTicket({
+          title: raw.title,
+          description: raw.description,
+          priority: raw.priority,
+          assignee_id: Number.isFinite(assignee_id) ? assignee_id! : null,
+          tags,
+          location: raw.location ? raw.location : null,
+        });
+        if (created) {
+          this.success.set('Ticket created');
+          await this.router.navigate(['/tickets', created.id]);
+        }
+      }
+    } catch (e) {
+      const message = (e as any)?.message ?? 'Failed to save ticket';
+      this.error.set(message);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  async onCancel(): Promise<void> {
+    if (this.isEdit()) {
+      await this.router.navigate(['/tickets', this.id()]);
+    } else {
+      await this.router.navigate(['/tickets']);
+    }
+  }
+}

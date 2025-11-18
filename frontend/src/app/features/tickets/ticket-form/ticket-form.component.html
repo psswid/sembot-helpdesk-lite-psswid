@@ -1,0 +1,54 @@
+<section class="form-wrap" [attr.aria-busy]="loading()">
+  <header class="header">
+    <a routerLink="/tickets" class="back">← Back to tickets</a>
+    <h1 class="title">@if (isEdit()) { Edit Ticket } @else { New Ticket }</h1>
+  </header>
+
+  @if (error(); as err) {
+    <p class="error" role="alert" aria-live="polite">{{ err }}</p>
+  }
+  @if (success(); as ok) {
+    <p class="success" role="status" aria-live="polite">{{ ok }}</p>
+  }
+
+  <form class="form" novalidate [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label>
+      <span>Title</span>
+      <input formControlName="title" type="text" required placeholder="Short summary" />
+    </label>
+
+    <label class="wide">
+      <span>Description</span>
+      <textarea formControlName="description" rows="6" required placeholder="Describe the issue"></textarea>
+    </label>
+
+    <label>
+      <span>Priority</span>
+      <select formControlName="priority" required>
+        @for (p of PRIORITY_OPTIONS; track p) {
+          <option [value]="p">{{ p }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      <span>Assignee ID</span>
+      <input formControlName="assignee_id" type="number" inputmode="numeric" min="1" placeholder="e.g. 3" [disabled]="!canAssign()" />
+    </label>
+
+    <label class="wide">
+      <span>Tags</span>
+      <input formControlName="tags" type="text" placeholder="comma separated" />
+    </label>
+
+    <label>
+      <span>Location</span>
+      <input formControlName="location" type="text" maxlength="120" placeholder="Optional city e.g., New York" />
+    </label>
+
+    <div class="actions">
+      <button type="submit" [disabled]="loading()">Save</button>
+      <button type="button" [disabled]="loading()" (click)="onCancel()">Cancel</button>
+    </div>
+  </form>
+</section>
