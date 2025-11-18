@@ -7,6 +7,13 @@
 .meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem 1rem; margin-bottom: 1rem; }
 .description { margin-bottom: 1rem; }
 .external { margin-bottom: 1rem; }
+.triage { margin-bottom: 1rem; }
+.triage .triage-actions { margin: 0.5rem 0; }
+.triage .suggestion { border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.75rem; }
+.triage .accept { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem 1rem; margin-top: 0.5rem; }
+.triage .accept label { display: grid; gap: 0.25rem; font-size: 0.9rem; }
+.triage .accept label.wide { grid-column: span 2; }
+.triage .accept .actions { grid-column: span 2; display: flex; gap: 0.5rem; }
 
 .history .timeline { list-style: none; margin: 0; padding: 0; border-left: 2px solid #e5e7eb; }
 .history .timeline li { position: relative; padding: 0.5rem 0 0.5rem 1rem; }

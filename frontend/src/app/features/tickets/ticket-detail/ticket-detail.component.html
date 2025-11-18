@@ -34,6 +34,62 @@
       <p>{{ t.description }}</p>
     </section>
 
+    @if (canEdit()) {
+      <section class="triage">
+        <h2>Triage</h2>
+        @if (triageError(); as terr) {
+          <p class="error" role="alert" aria-live="polite">{{ terr }}</p>
+        }
+        <div class="triage-actions">
+          <button type="button" aria-label="Suggest triage" [disabled]="triageLoading()" (click)="suggest()">Suggest Triage</button>
+        </div>
+
+        @if (triageSuggestion(); as s) {
+          <div class="suggestion">
+            <p><strong>Driver:</strong> {{ s.driver }} @if (s.confidence != null) { ({{ s.confidence | number:'1.0-2' }}) }</p>
+            @if (s.reasoning) {
+              <details>
+                <summary>Reasoning</summary>
+                <p>{{ s.reasoning }}</p>
+              </details>
+            }
+            <form class="accept" novalidate [formGroup]="acceptForm" (ngSubmit)="accept()">
+              <label>
+                <span>Priority</span>
+                <select formControlName="priority" required>
+                  <option value="low">low</option>
+                  <option value="medium">medium</option>
+                  <option value="high">high</option>
+                </select>
+              </label>
+              <label class="wide">
+                <span>Tags</span>
+                <input formControlName="tags" type="text" placeholder="comma separated" />
+              </label>
+              <label>
+                <span>Assignee ID</span>
+                <input formControlName="assignee_id" type="number" inputmode="numeric" min="1" placeholder="e.g. 3" />
+              </label>
+              <label>
+                <span>Status</span>
+                <select formControlName="status">
+                  <option value="">(no change)</option>
+                  <option value="open">open</option>
+                  <option value="in_progress">in_progress</option>
+                  <option value="resolved">resolved</option>
+                  <option value="closed">closed</option>
+                </select>
+              </label>
+              <div class="actions">
+                <button type="submit" aria-label="Accept triage" [disabled]="triageLoading()">Accept</button>
+                <button type="button" aria-label="Reject triage" [disabled]="triageLoading()" (click)="reject()">Reject</button>
+              </div>
+            </form>
+          </div>
+        }
+      </section>
+    }
+
     @if (t.external?.weather; as weather) {
       <section class="external">
         <h2>Weather</h2>
