@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ExternalDataController;
 use App\Http\Controllers\Api\ExternalUserController;
 use App\Http\Controllers\Api\TicketController;
 use App\Http\Controllers\Api\TriageController;
@@ -26,6 +27,10 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/external-users', [ExternalUserController::class, 'index']);
 Route::post('/external-users/sync', [ExternalUserController::class, 'sync'])
     ->middleware('auth:sanctum');
+
+// External data proxy (WeatherAPI) — protected with Sanctum
+Route::middleware(['auth:sanctum', 'throttle:60,1'])
+    ->get('/external-data', [ExternalDataController::class, 'index']);
 
 // Ticket authorization layer (policies) — to be used by EPIC 3 CRUD endpoints
 Route::middleware('auth:sanctum')->prefix('tickets')->group(function () {
