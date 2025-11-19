@@ -218,3 +218,61 @@ export const AllStatuses: Story = {
     },
   },
 };
+
+export const ThemeLight: Story = {
+  render: (args) => ({
+    props: args,
+    template: `
+      <div style="padding: var(--space-4); background: var(--color-bg);">
+        <app-ticket-card
+          [title]="title"
+          [description]="description"
+          [status]="status"
+          [priority]="priority"
+          [tags]="tags"
+          [loading]="loading"
+        ></app-ticket-card>
+      </div>
+    `,
+  }),
+  args: {
+    title: 'Cannot login to admin panel',
+    description: 'Users are reporting issues accessing the admin dashboard. The login button appears to be unresponsive.',
+    status: 'open',
+    priority: 'high',
+    tags: ['authentication', 'urgent'],
+    loading: false,
+  },
+  parameters: {
+    docs: { description: { story: 'Ticket card in the default (light) theme.' } },
+  },
+};
+
+export const ThemeDark: Story = {
+  render: (args) => ({
+    props: args,
+    template: `
+      <div data-theme="dark" style="padding: var(--space-4); background: var(--color-bg);">
+        <app-ticket-card
+          [title]="title"
+          [description]="description"
+          [status]="status"
+          [priority]="priority"
+          [tags]="tags"
+          [loading]="loading"
+        ></app-ticket-card>
+      </div>
+    `,
+  }),
+  args: {
+    title: 'Cannot login to admin panel',
+    description: 'Users are reporting issues accessing the admin dashboard. The login button appears to be unresponsive.',
+    status: 'open',
+    priority: 'high',
+    tags: ['authentication', 'urgent'],
+    loading: false,
+  },
+  parameters: {
+    docs: { description: { story: 'Ticket card in the dark theme (using `data-theme="dark"`).' } },
+  },
+};

@@ -136,3 +136,39 @@ export const AllSizes: Story = {
     },
   },
 };
+
+export const ThemeLight: Story = {
+  render: (args) => ({
+    props: args,
+    template: `
+      <div style="padding: var(--space-4); background: var(--color-bg);">
+        <app-priority-badge [priority]="priority" [size]="size"></app-priority-badge>
+      </div>
+    `,
+  }),
+  args: {
+    priority: 'medium',
+    size: 'md',
+  },
+  parameters: {
+    docs: { description: { story: 'Priority badge in the default (light) theme.' } },
+  },
+};
+
+export const ThemeDark: Story = {
+  render: (args) => ({
+    props: args,
+    template: `
+      <div data-theme="dark" style="padding: var(--space-4); background: var(--color-bg);">
+        <app-priority-badge [priority]="priority" [size]="size"></app-priority-badge>
+      </div>
+    `,
+  }),
+  args: {
+    priority: 'medium',
+    size: 'md',
+  },
+  parameters: {
+    docs: { description: { story: 'Priority badge in the dark theme (using `data-theme="dark"`).' } },
+  },
+};
