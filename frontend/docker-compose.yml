@@ -1,0 +1,32 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sembot-frontend
+    ports:
+      - "4200:80"
+    restart: unless-stopped
+    networks:
+      - sembot-network
+
+  # Development mode with hot reload
+  frontend-dev:
+    image: node:22-alpine
+    container_name: sembot-frontend-dev
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "4200:4200"
+    command: sh -c "npm install && npm start -- --host 0.0.0.0"
+    restart: unless-stopped
+    networks:
+      - sembot-network
+    profiles:
+      - dev
+
+networks:
+  sembot-network:
+    external: true

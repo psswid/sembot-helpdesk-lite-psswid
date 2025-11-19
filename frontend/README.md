@@ -54,6 +54,69 @@ ng e2e
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
+## Docker
+
+### Production Build
+
+To run the application in production mode using Docker:
+
+```bash
+# Create the network (only needed once, if not already created by the API)
+docker network create sembot-network
+
+# Build and start the container
+docker-compose up -d
+
+# View logs
+docker-compose logs -f frontend
+```
+
+The application will be available at `http://localhost:4200`.
+
+To stop the container:
+
+```bash
+docker-compose down
+```
+
+### Development Mode with Hot Reload
+
+To run the application in development mode with hot reload:
+
+```bash
+# Start the development container
+docker-compose --profile dev up frontend-dev
+
+# Or in detached mode
+docker-compose --profile dev up -d frontend-dev
+```
+
+This will mount your local source code into the container and enable live reloading.
+
+### Building the Docker Image
+
+To build the Docker image manually:
+
+```bash
+docker build -t sembot-frontend .
+```
+
+### Docker Commands
+
+```bash
+# Rebuild the image
+docker-compose build
+
+# View running containers
+docker-compose ps
+
+# Stop and remove containers
+docker-compose down
+
+# Remove volumes (clean start)
+docker-compose down -v
+```
+
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
