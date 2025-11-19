@@ -25,7 +25,8 @@ export class TicketDetailComponent {
 
   readonly canEdit = computed(() => {
     const user = this.auth.currentUser();
-    const role = user?.role;
+    const role = user?.role_name;
+    console.log('Current user:', role);
     return role === 'admin' || role === 'agent';
   });
 

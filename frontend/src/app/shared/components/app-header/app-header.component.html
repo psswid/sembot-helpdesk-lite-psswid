@@ -26,7 +26,7 @@
 
      @if (auth.currentUser()) {
        <span class="user" aria-label="Current user">
-         {{ auth.currentUser()!.name }} ({{ auth.currentUser()!.role }})
+         {{ auth.currentUser()!.name }} ({{ auth.currentUser()!.role_name }})
        </span>
        <button type="button" class="logout-btn" (click)="logout()">Logout</button>
      } @else {

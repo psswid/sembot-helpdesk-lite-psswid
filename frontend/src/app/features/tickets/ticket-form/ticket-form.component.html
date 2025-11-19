@@ -42,6 +42,15 @@
     </label>
 
     <label>
+      <span>Status</span>
+      <select formControlName="status" required>
+        @for (s of STATUS_OPTIONS; track s) {
+          <option [value]="s">{{ s }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
       <span>Assignee ID</span>
       <input formControlName="assignee_id" type="number" inputmode="numeric" min="1" placeholder="e.g. 3" [disabled]="!canAssign()" />
     </label>

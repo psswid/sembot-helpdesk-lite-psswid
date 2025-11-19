@@ -30,7 +30,8 @@ export class TriageService {
     try {
       const url = apiUrl(`/api/tickets/${ticketId}/triage-suggest`);
       const res = await firstValueFrom(this.http.post(url, {}));
-      const parsed = parseWith(TriageSuggestionSchema, res);
+      const payload = (res as any)?.data ?? res;
+      const parsed = parseWith(TriageSuggestionSchema, payload);
       this.suggestion.set(parsed);
       return parsed;
     } catch (e) {
@@ -50,7 +51,8 @@ export class TriageService {
     try {
       const url = apiUrl(`/api/tickets/${ticketId}/triage-accept`);
       const res = await firstValueFrom(this.http.post(url, patch));
-      const updated = parseWith(TicketSchema, res);
+      const payload = (res as any)?.data ?? res;
+      const updated = parseWith(TicketSchema, payload);
       // Update TicketService caches
       this.tickets.selectedTicket.set(updated);
       const list = this.tickets.tickets();

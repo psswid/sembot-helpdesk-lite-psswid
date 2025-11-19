@@ -3,11 +3,12 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TicketService } from '../../../core/services/ticket.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { TicketPriority } from '../../../core/models/ticket.model';
+import { TicketPriority, TicketStatus } from '../../../core/models/ticket.model';
 import { TriageService } from '../../../core/services/triage.service';
 import { TriageSuggestionPanelComponent } from '../../../shared/components/triage-suggestion-panel/triage-suggestion-panel.component';
 
 const PRIORITY_OPTIONS: TicketPriority[] = ['low', 'medium', 'high'];
+const STATUS_OPTIONS: TicketStatus[] = ['open', 'in_progress', 'resolved', 'closed'];
 
 @Component({
   selector: 'app-ticket-form',
@@ -31,7 +32,7 @@ export class TicketFormComponent {
   readonly success = signal<string | null>(null);
 
   readonly canAssign = computed(() => {
-    const role = this.auth.currentUser()?.role;
+    const role = this.auth.currentUser()?.role_name;
     return role === 'admin' || role === 'agent';
   });
 
@@ -41,12 +42,14 @@ export class TicketFormComponent {
     title: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(200)]),
     description: this.fb.nonNullable.control('', [Validators.required]),
     priority: this.fb.nonNullable.control<TicketPriority>('medium', [Validators.required]),
+    status: this.fb.nonNullable.control<TicketStatus>('open', [Validators.required]),
     assignee_id: this.fb.control<string>(''),
     tags: this.fb.control<string>(''),
     location: this.fb.control<string>('')
   });
 
   protected readonly PRIORITY_OPTIONS = PRIORITY_OPTIONS;
+  protected readonly STATUS_OPTIONS = STATUS_OPTIONS;
 
   constructor() {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -63,6 +66,7 @@ export class TicketFormComponent {
             title: t.title,
             description: t.description,
             priority: t.priority,
+            status: t.status,
             assignee_id: t.assignee?.id != null ? String(t.assignee.id) : '',
             tags: t.tags?.join(', ') ?? '',
             location: t.location ?? ''
@@ -122,6 +126,7 @@ export class TicketFormComponent {
           title: raw.title,
           description: raw.description,
           priority: raw.priority,
+          status: raw.status as any,
           assignee_id: Number.isFinite(assignee_id) ? assignee_id! : null,
           tags,
           location: raw.location ? raw.location : null,

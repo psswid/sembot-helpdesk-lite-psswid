@@ -67,7 +67,7 @@
                 </div>
                 <div class="row small">
                   <span>{{ h.changed_at }}</span>
-                  <span>by {{ h.changed_by?.name || ('#' + h.changed_by_user_id) }}</span>
+                  <span>by {{ (h.changed_by && h.changed_by.name) ? h.changed_by.name : (h.changed_by && h.changed_by.id) ? ('#' + h.changed_by.id) : '—' }}</span>
                 </div>
               </div>
             </li>
