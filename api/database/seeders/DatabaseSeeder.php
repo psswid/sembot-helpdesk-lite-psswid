@@ -26,17 +26,17 @@ class DatabaseSeeder extends Seeder
         $reporter = User::where('email', 'reporter@example.com')->first() ?: User::query()->first();
         $agent = User::where('email', 'agent@example.com')->first();
 
-        // Create 12 tickets and assign reporter; 70% get an agent assigned
-        $tickets = Ticket::factory()
-            ->count(12)
-            ->state(function () use ($reporter, $agent) {
-                $assign = fake()->boolean(70);
-                return [
-                    'reporter_id' => $reporter?->id,
-                    'assignee_id' => $assign && $agent ? $agent->id : null,
-                ];
-            })
-            ->create();
+        // Seed tickets using the dedicated TicketSeeder so templates and placeholders
+        // from TicketSeeder are used. Then load the recently-created tickets
+        // (by reporter) to create history rows below.
+        $this->call(TicketSeeder::class);
+
+        // Fetch the tickets just created by TicketSeeder. TicketSeeder sets
+        // reporter_id to the same reporter, so use that to select the seeded rows.
+        $tickets = Ticket::where('reporter_id', $reporter?->id)
+            ->orderBy('created_at', 'desc')
+            ->take(12)
+            ->get();
 
         // Create a few sample history rows for random tickets
         $agentUserId = $agent?->id ?? $reporter?->id;

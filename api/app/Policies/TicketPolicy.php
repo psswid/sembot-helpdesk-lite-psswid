@@ -61,7 +61,7 @@ class TicketPolicy
     public function update(User $user, Ticket $ticket): bool
     {
         // Agents can update all tickets; reporters cannot update after creation per requirements
-        return $user->hasRole('agent');
+        return $user->hasRole(['admin', 'agent']);
     }
 
     /**

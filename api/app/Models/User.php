@@ -36,6 +36,15 @@ class User extends Authenticatable
     ];
 
     /**
+     * Attributes that should be appended to the model's array / JSON form.
+     *
+     * @var list<string>
+     */
+    protected $appends = [
+        'role_name',
+    ];
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -54,5 +63,13 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    /**
+     * Return the human-readable role name for the user.
+     */
+    public function getRoleNameAttribute(): ?string
+    {
+        return $this->role?->name;
     }
 }
