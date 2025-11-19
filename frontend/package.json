@@ -49,6 +49,7 @@
     "@angular/build": "^20.3.10",
     "@angular/cli": "^20.3.10",
     "@angular/compiler-cli": "^20.3.0",
+    "@storybook/addon-a11y": "^10.0.8",
     "@storybook/addon-docs": "^10.0.8",
     "@storybook/addon-onboarding": "^10.0.8",
     "@storybook/angular": "^10.0.8",

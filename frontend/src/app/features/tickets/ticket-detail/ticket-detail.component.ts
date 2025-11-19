@@ -4,10 +4,11 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TicketService } from '../../../core/services/ticket.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { TriageSuggestionPanelComponent } from '../../../shared/components/triage-suggestion-panel/triage-suggestion-panel.component';
+import { TicketCardComponent } from '../../../shared/components/ticket-card/ticket-card.component';
 
 @Component({
   selector: 'app-ticket-detail',
-  imports: [RouterLink, JsonPipe, TriageSuggestionPanelComponent],
+  imports: [RouterLink, JsonPipe, TriageSuggestionPanelComponent, TicketCardComponent],
   templateUrl: './ticket-detail.component.html',
   styleUrl: './ticket-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

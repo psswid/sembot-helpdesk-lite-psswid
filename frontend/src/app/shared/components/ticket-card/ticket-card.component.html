@@ -1,0 +1,39 @@
+@if (loading()) {
+  <div class="card-skeleton">
+    <div class="skeleton-header"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-line short"></div>
+    <div class="skeleton-footer"></div>
+  </div>
+} @else {
+  <div class="card-content">
+    <div class="card-header">
+      <h3 class="card-title">{{ title() }}</h3>
+      <app-priority-badge [priority]="priority()" size="sm" />
+    </div>
+
+    @if (description()) {
+      <p class="card-description">{{ description() }}</p>
+    }
+
+    <div class="card-footer">
+      <div class="meta-inline">
+        <span class="status-badge" [attr.data-status]="status()">{{ getStatusLabel() }}</span>
+        @if (location()) {
+          <span class="meta-item"><strong>Location:</strong> {{ location() }}</span>
+        }
+        @if (createdAt()) {
+          <span class="meta-item"><strong>Created:</strong> {{ createdAt() }}</span>
+        }
+      </div>
+
+      @if (tags().length > 0) {
+        <div class="tags">
+          @for (tag of tags(); track tag) {
+            <span class="tag">{{ tag }}</span>
+          }
+        </div>
+      }
+    </div>
+  </div>
+}

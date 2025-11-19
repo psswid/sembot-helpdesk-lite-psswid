@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output, inject, computed } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+// PriorityBadgeComponent is not used in this template; remove from imports
 import { TriageService } from '../../../core/services/triage.service';
 
 @Component({

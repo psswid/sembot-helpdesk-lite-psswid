@@ -1,0 +1,101 @@
+// Color tokens for light and dark themes
+
+:root {
+  // Base colors - Light theme
+  --color-bg: #ffffff;
+  --color-bg-secondary: #f8f9fa;
+  --color-bg-tertiary: #e9ecef;
+  --color-fg: #212529;
+  --color-fg-secondary: #6c757d;
+  --color-fg-tertiary: #adb5bd;
+
+  // Border colors
+  --color-border: #dee2e6;
+  --color-border-hover: #adb5bd;
+
+  // Primary/Accent
+  --color-primary: #0d6efd;
+  --color-primary-hover: #0b5ed7;
+  --color-primary-light: #cfe2ff;
+
+  // Semantic colors
+  --color-success: #198754;
+  --color-success-light: #d1e7dd;
+  --color-success-dark: #146c43;
+
+  --color-warning: #ffc107;
+  --color-warning-light: #fff3cd;
+  --color-warning-dark: #cc9a06;
+
+  --color-danger: #dc3545;
+  --color-danger-light: #f8d7da;
+  --color-danger-dark: #b02a37;
+
+  --color-info: #0dcaf0;
+  --color-info-light: #cff4fc;
+  --color-info-dark: #087990;
+
+  // Priority colors
+  --color-priority-low: var(--color-success);
+  --color-priority-low-light: var(--color-success-light);
+  --color-priority-medium: var(--color-warning);
+  --color-priority-medium-light: var(--color-warning-light);
+  --color-priority-high: var(--color-danger);
+  --color-priority-high-light: var(--color-danger-light);
+
+  // Status colors
+  --color-status-open: #6c757d;
+  --color-status-in-progress: #0dcaf0;
+  --color-status-resolved: #198754;
+  --color-status-closed: #495057;
+}
+
+[data-theme='dark'] {
+  // Base colors - Dark theme
+  --color-bg: #1a1d23;
+  --color-bg-secondary: #25282e;
+  --color-bg-tertiary: #2f3339;
+  --color-fg: #e9ecef;
+  --color-fg-secondary: #adb5bd;
+  --color-fg-tertiary: #6c757d;
+
+  // Border colors
+  --color-border: #495057;
+  --color-border-hover: #6c757d;
+
+  // Primary/Accent
+  --color-primary: #4a9eff;
+  --color-primary-hover: #6bb0ff;
+  --color-primary-light: #1e3a5f;
+
+  // Semantic colors
+  --color-success: #28a745;
+  --color-success-light: #1e4620;
+  --color-success-dark: #34ce57;
+
+  --color-warning: #ffc107;
+  --color-warning-light: #4d3800;
+  --color-warning-dark: #ffcd39;
+
+  --color-danger: #dc3545;
+  --color-danger-light: #4d1f24;
+  --color-danger-dark: #e4606d;
+
+  --color-info: #17a2b8;
+  --color-info-light: #0f5257;
+  --color-info-dark: #3dd5f3;
+
+  // Priority colors (adjusted for dark theme)
+  --color-priority-low: #28a745;
+  --color-priority-low-light: #1e4620;
+  --color-priority-medium: #ffc107;
+  --color-priority-medium-light: #4d3800;
+  --color-priority-high: #dc3545;
+  --color-priority-high-light: #4d1f24;
+
+  // Status colors
+  --color-status-open: #adb5bd;
+  --color-status-in-progress: #17a2b8;
+  --color-status-resolved: #28a745;
+  --color-status-closed: #6c757d;
+}

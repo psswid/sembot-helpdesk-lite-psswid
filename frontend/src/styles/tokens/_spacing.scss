@@ -1,0 +1,41 @@
+// Spacing tokens
+
+:root {
+  // Base spacing scale (4px base)
+  --space-1: 0.25rem; // 4px
+  --space-2: 0.5rem;  // 8px
+  --space-3: 0.75rem; // 12px
+  --space-4: 1rem;    // 16px
+  --space-5: 1.5rem;  // 24px
+  --space-6: 2rem;    // 32px
+  --space-7: 2.5rem;  // 40px
+  --space-8: 3rem;    // 48px
+  --space-9: 4rem;    // 64px
+  --space-10: 5rem;   // 80px
+
+  // Border radius
+  --radius-sm: 0.25rem;  // 4px
+  --radius-md: 0.375rem; // 6px
+  --radius-lg: 0.5rem;   // 8px
+  --radius-xl: 0.75rem;  // 12px
+  --radius-2xl: 1rem;    // 16px
+  --radius-full: 9999px;
+
+  // Container widths
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+
+  // Component-specific spacing
+  --badge-padding-sm: var(--space-1) var(--space-2);
+  --badge-padding-md: var(--space-2) var(--space-3);
+  --badge-padding-lg: var(--space-2) var(--space-4);
+
+  --card-padding: var(--space-4);
+  --panel-padding: var(--space-5);
+
+  --button-padding-sm: var(--space-2) var(--space-3);
+  --button-padding-md: var(--space-2) var(--space-4);
+  --button-padding-lg: var(--space-3) var(--space-5);
+}
