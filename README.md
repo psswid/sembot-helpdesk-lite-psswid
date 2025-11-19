@@ -8,6 +8,8 @@ A modern helpdesk application built with Laravel 11 (API) and Angular 20 (Fronte
 
 - Docker and Docker Compose
 - Git
+- OpenRouter API Key ('https://openrouter.ai/')
+- Weather API key ('https://www.weatherapi.com/')
 
 ### Running the Application
 
